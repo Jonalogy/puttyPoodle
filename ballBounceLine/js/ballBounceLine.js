@@ -20,7 +20,7 @@ var ballR = 10;
 
 //----Gravity-----
 var vY = 1;
-var gY = 1;
+var gY = 0.1;
 var vX = 0; // Velocity in X-axis
 var aX = 0; //Velocity in Y-axis
 
@@ -41,7 +41,7 @@ function lift(){
   xEnd = event.clientX;//Obtaining cursor's X and Y coordinates
   yEnd = event.clientY;
   console.log("Mouseup at: ("+xEnd+","+yEnd+")" );
-  run = setInterval(draw,100);
+  run = setInterval(draw,10);
 }
 
 function draw(){
@@ -94,22 +94,46 @@ function ball(){
 
   //-----Changes in X-axis movement
   if(aX>0){
-    aX = Number((aX-0.0001).toFixed(6));
+    aX = Number((aX-0.005).toFixed(6));
+  }
+  else{
+    aX = Number((aX+0.005).toFixed(6));
   }
   vX = Number((vX + aX).toFixed(6));
   ballX = Number((ballX + vX).toFixed(6));
+
   console.log("ballY :"+ballY,"ballX :"+ballX, "vY :"+vY, "vX :"+vX, "gY :"+gY, "aX :"+aX, "m :"+m);
+  // console.log("ballY :"+ballY,"ballX :"+ballX, "vY :"+vY, "vX :"+vX, "gY :"+gY, "aX :"+aX, "m :"+m);
 
   //------Ball control at bottom edge
   if((ballY+ballR) >= stageHt){
     ballY = stageHt-ballR;
-    vY = Number((vY*(-0.9)).toFixed(6));
-    gY = Number((gY - 0.0001).toFixed(6));
+    vY = Number((vY*(-0.8)).toFixed(6));
+    // gY = Number((gY - 0.01).toFixed(6));
 
-    if((gY>=-1 && gY<1) && (vY>=-1 && vY<1)){
+    if(vX!=0){
+      vX = Number((vX*0.9).toFixed(6))//Friction Variable
+    }
+
+
+    if((gY>=-1 && gY<1) && (vY>=-0.5 && vY<0.5) && (vX>=-0.3 && vX<0.3) && (aX>=-0.1 && aX<0.1)){
       clearInterval(run);
     }
   }
+
+  //-----Ball control after colliding right edge
+  if((ballX+ballR) >= stageWd){
+    ballX = stageWd-ballR;
+    aX = Number((m*(-0.01)).toFixed(6));
+    vX = Number((vX*(-0.5).toFixed(6)));
+    }
+
+  //-----Ball control after colliding left edge
+  if((ballX-ballR) <= 0){
+    ballX = ballR+0;
+    aX = Number((m*(-0.01)).toFixed(6));
+    vX = Number((vX*(-0.5).toFixed(6)));
+    }
 
   //------Bounce for bridge
   if(ballX>xStart && ballX<xEnd){
@@ -117,11 +141,16 @@ function ball(){
     var calY = Number(((m*ballX)+c).toFixed(3));
     // console.log("Ball has to stop falling ard ballY = "+calY);
 
-    if((ballY+ballR) >= calY){
+    if((ballY+ballR) >= calY && (ballY+ballR)<=(calY+10)){
       // console.log("ballY :"+ballY , "calY :"+calY);
       ballY = calY - ballR;//updating ballY to calculated y-position
-      aX = Number((m*(1)).toFixed(6));
-      // ballX = Number((ballX + m).toFixed(6)); //temporarily giving the call an X-axis movement.
+      aX = Number((m*(0.1)).toFixed(6));
+      if(m>=0){
+        vX = 1;
+      }
+      else{
+        vX = -1;
+      }
 
       vY = Number((vY*(-0.9)).toFixed(6));
       gY = Number((gY - 0.0001).toFixed(6));
@@ -132,13 +161,16 @@ function ball(){
 }
 
 function refresh(){
-  ctx.clearRect(0,0,300,300);
+  ctx.clearRect(0,0,600,300);
 }
 
 function clear(){
-  ctx.clearRect(0,0,300,300);
+  ctx.clearRect(0,0,600,300);
   ballY = 0; ballX = 150;
   vY = 1;
+  vX = 0
   gY = 1;
+  aX = 0;
   m = 0;
+  c = 0;
 }
