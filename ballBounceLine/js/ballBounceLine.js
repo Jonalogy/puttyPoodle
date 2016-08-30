@@ -54,7 +54,7 @@ function bridge(){ //Drawn line
     ctx.beginPath();
     ctx.moveTo(xStart,yStart);
     ctx.lineTo(xEnd,yEnd);
-    ctx.lineWidth = 10;
+    ctx.lineWidth = 1;
     ctx.stroke();
     m = ((yEnd - yStart)/(xEnd - xStart)); //Calculates gradient
     c = (yStart - (m*xStart)); // Calculates y-intercept
@@ -82,12 +82,18 @@ function ball(){
   ctx.lineWidth = 1;
   ctx.stroke();
 
+  ctx.save();
+  ctx.strokeStyle = "red";
+  ctx.strokeRect(ballX, ballY, 1, 1);
+  ctx.restore();
+
   vY = Number((vY + gY).toFixed(6));
   ballY = Number((ballY + vY).toFixed(6));
-  console.log("ballY :"+ballY, "vY :"+vY, "gY :"+gY);
+  console.log("ballY :"+ballY,"ballX :"+ballX, "vY :"+vY, "gY :"+gY);
 
-  //To control ball at bottom edge
+  //Ball control at bottom edge
   if((ballY+ballR) >= stageHt){
+    ballY = stageHt-ballR;
     vY = Number((vY*(-0.9)).toFixed(6));
     gY = Number((gY - 0.0001).toFixed(6));
 
@@ -98,14 +104,20 @@ function ball(){
 
   //Bounce for bridge
   if(ballX>xStart && ballX<xEnd){
-    var calY = Number(((m*ballX)+c).toFixed(0)); //Using ballX to calculate the height ball has to stop
+    //Using ballX to calculate the height ball has to stop
+    var calY = Number(((m*ballX)+c).toFixed(0));
+
     console.log("Ball has to stop falling ard ballY = "+calY);
     if((ballY+ballR) >= calY){
       console.log("ballY :"+ballY , "calY :"+calY);
+      ballY = calY - ballR;//updating ballY to calculated y-position
+      m = Number((m*50).toFixed(6));
+      ballX = Number((ballX + m).toFixed(6));
       vY = Number((vY*(-0.9)).toFixed(6));
       gY = Number((gY - 0.0001).toFixed(6));
+      console.log("ballY :"+ballY,"ballX :"+ballX, "m = "+m, "vY :"+vY, "gY :"+gY);
       // clearInterval(run);
-      }
+    }
   }
 }
 
@@ -115,7 +127,7 @@ function refresh(){
 
 function clear(){
   ctx.clearRect(0,0,300,300);
-  ballY = 0;
+  ballY = 0; ballX = 150;
   vY = 1;
   gY = 1;
   m = 0;
