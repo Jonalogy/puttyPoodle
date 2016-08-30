@@ -19,8 +19,8 @@ var ballY = 50;
 var ballR = 10;
 
 //----Gravity-----
-var vY = 0;
-var gY = 0;
+var vY = 1;
+var gY = 1;
 
 //----Event Listeners-----
 //document.body.addEventListener("mousedown",function(){console.log("Click");})
@@ -49,15 +49,15 @@ function draw(){
 }
 
 
-function bridge(){
+function bridge(){ //Drawn line
 
     ctx.beginPath();
     ctx.moveTo(xStart,yStart);
     ctx.lineTo(xEnd,yEnd);
     ctx.lineWidth = 10;
     ctx.stroke();
-    m = ((yEnd - yStart)/(xEnd - xStart));
-    c = (yStart - (m*xStart));
+    m = ((yEnd - yStart)/(xEnd - xStart)); //Calculates gradient
+    c = (yStart - (m*xStart)); // Calculates y-intercept
     console.log("Gradient =" + m, "C :" + c  );
 
 
@@ -82,7 +82,6 @@ function ball(){
   ctx.lineWidth = 1;
   ctx.stroke();
 
-  gY+=1;
   vY += gY;
   ballY += vY;
   console.log("ballY :"+ballY, "vY :"+vY, "gY :"+gY);
@@ -96,10 +95,10 @@ function ball(){
     console.log("Ball has to stop falling ard ballY = "+calY);
     if((ballY+ballR) >= calY){
       console.log("ballY :"+ballY , "calY :"+calY);
+      // vY *= -0.8;
       clearInterval(run);
-    }
+      }
   }
-
 }
 
 
@@ -110,7 +109,7 @@ function refresh(){
 function clear(){
   ctx.clearRect(0,0,300,300);
   ballY = 0;
-  vY = 0;
-  gY = 0;
+  vY = 1;
+  gY = 1;
   m = 0;
 }
