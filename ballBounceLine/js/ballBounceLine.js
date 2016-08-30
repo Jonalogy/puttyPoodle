@@ -20,6 +20,7 @@ var ballR = 10;
 
 //----Gravity-----
 var vY = 1;
+var vX = 0;
 var gY = 1;
 
 //----Event Listeners-----
@@ -58,10 +59,9 @@ function bridge(){ //Drawn line
     ctx.stroke();
     m = ((yEnd - yStart)/(xEnd - xStart)); //Calculates gradient
     c = (yStart - (m*xStart)); // Calculates y-intercept
-    console.log("Gradient =" + m, "C :" + c  );
 
-
-    //----The following are test codes to check test out line equation of the game.
+    // console.log("Gradient =" + m, "C :" + c  );
+    //----The following are test codes to test out line equation in the game.
     //----Note that gradient values in canvas are negative of gradients drawn in reality
     //----Reason is in <canvas> the coordinates below the origin are considered positive values.
     // var tX, tY, tXX, tYY;
@@ -110,9 +110,11 @@ function ball(){
     console.log("Ball has to stop falling ard ballY = "+calY);
     if((ballY+ballR) >= calY){
       console.log("ballY :"+ballY , "calY :"+calY);
+
       ballY = calY - ballR;//updating ballY to calculated y-position
-      m = Number((m*50).toFixed(6));
-      ballX = Number((ballX + m).toFixed(6));
+      m = Number((m*10).toFixed(6));
+      ballX = Number((ballX + m).toFixed(6)); //temporarily giving the call an X-axis movement.
+
       vY = Number((vY*(-0.9)).toFixed(6));
       gY = Number((gY - 0.0001).toFixed(6));
       console.log("ballY :"+ballY,"ballX :"+ballX, "m = "+m, "vY :"+vY, "gY :"+gY);
