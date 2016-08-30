@@ -101,7 +101,6 @@ function ball(){
   }
 }
 
-
 function refresh(){
   ctx.clearRect(0,0,300,300);
 }
