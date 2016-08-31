@@ -38,18 +38,17 @@ function down (){
   // xStart = event.clientX;//Obtaining cursor's X and Y coordinates
   pathXY.push(event.clientX);//Collect start x-cord
   pathXY.push(event.clientY);//collect start y-cord
-
-  console.log("MouseDown at: " + pathXY );
 }
 
 function lift(){
   pathXY.push(event.clientX);//collect end X-cord
   pathXY.push(event.clientY);//collect end Y-cord
+  console.log("Coordinates of mousedown and mouseup: " + pathXY);
 
   bridges.push(pathXY);// pushing path cords into bridge array for storing
   pathXY=[];//clear array for the next path input
   path++;//increment path count
-  console.log("Mouseup at: ("+pathXY[2]+","+pathXY[3]+")" );
+
   console.log(bridges);
 }
 
@@ -61,17 +60,22 @@ function draw(){
 
 
 function bridge(){ //Drawn line
-
     for(i=0; i<path; i++){
       ctx.beginPath();
       ctx.moveTo(bridges[i][0],bridges[i][1]);
       ctx.lineTo(bridges[i][2],bridges[i][3]);
       ctx.lineWidth = 10;
       ctx.stroke();
-    }
+      if(bridges[i].length=4){
+        m = Number(((bridges[i][3] - bridges[i][1])/(bridges[i][2] - bridges[i][0])).toFixed(6)); //Calculates gradient
+        c = Number((bridges[i][1] - (m*bridges[i][0])).toFixed(6)); // Calculates y-intercept
+        bridges[i].push(m); //Calculates gradient
+        bridges[i].push(c); // Calculates y-intercept
+        m=0;c=0;
+      }
+      console.log(bridges);
 
-    // m = Number(((yEnd - yStart)/(xEnd - xStart)).toFixed(6)); //Calculates gradient
-    // c = Number((yStart - (m*xStart)).toFixed(6)); // Calculates y-intercept
+      }
 
     //-----The following lines of code is to draw another line within the
     //-----previous one to confirm where the lineWidth is extended from.
