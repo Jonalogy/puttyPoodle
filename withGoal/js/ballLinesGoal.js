@@ -7,6 +7,7 @@ var start = 0;
 //-----Stage-----
 var stageWd = document.getElementById('canvas').width;
 var stageHt = document.getElementById('canvas').height;
+var score = false;
 
 //-----Bridge-----
 var m;//gradient
@@ -16,36 +17,41 @@ var pathXY = [];//To store start & end coordinates for each path
 var path = 0;//To keep count on the number of paths
 
 //-----Ball-----
-var ballX = 150;
-var ballY = 50;
-var ballR = 10;
+  var ballX = Math.floor(Math.random()*900)+50;
+  var ballY = Math.floor(Math.random()*50)+10;
+  var ballR = 10;
+
+//-----Goal-----
+  var goalX = Math.floor(Math.random()*560)+20;
+  var goalY = Math.floor(Math.random()*260)+20;
+  var goalR = 15;
 
 //----Gravity-----
-var vY = 1; var test = 0;
-var gY = 0.1;
-var vX = 0; // Velocity in X-axis
-var aX = 0; //Velocity in Y-axis
+  var vY = 1;
+  var gY = 0.1;
+  var vX = 0; // Velocity in X-axis
+  var aX = 0; //Velocity in Y-axis
 
 //----Event Listeners-----
-//document.body.addEventListener("mousedown",function(){console.log("Click");})
-$('#canvas').mousedown(down);
-$('#canvas').mouseup(lift);
-$('#start').click(function(){start = 1});
-//---
-run = setInterval(draw,10);
+  $('#canvas').mousedown(down);
+  $('#canvas').mouseup(lift);
+  $('#start').click(function(){start = 1;});
 
-function down (){
-  ctx.clearRect(0,0,300,300);
-  // xStart = event.clientX;//Obtaining cursor's X and Y coordinates
-  pathXY.push(event.clientX);//Collect start x-cord
-  pathXY.push(event.clientY);//collect start y-cord
+//---Interval---
+run = setInterval(draw,20);
+
+function down(){
+  var top = document.getElementById('canvas').offsetTop;
+  var left = document.getElementById('canvas').offsetLeft;
+  pathXY.push((event.clientX)-left);//Collect start x-cord
+  pathXY.push((event.clientY)-top);//collect start y-cord
 }
 
 function lift(){
-  pathXY.push(event.clientX);//collect end X-cord
-  pathXY.push(event.clientY);//collect end Y-cord
-  console.log("Coordinates of mousedown and mouseup: " + pathXY);
-
+  var top = document.getElementById('canvas').offsetTop;
+  var left = document.getElementById('canvas').offsetLeft;
+  pathXY.push((event.clientX)-left);//collect end X-cord
+  pathXY.push((event.clientY)-top);//collect end Y-cord
   bridges.push(pathXY);// pushing path cords into bridge array for storing
   pathXY=[];//clear array for the next path input
   path++;//increment path count
@@ -54,20 +60,35 @@ function lift(){
 }
 
 function draw(){
-  refresh()
+  refresh();
   bridge();
-  if(start === 1){ball();}
-  if(vY>test){test = vY};
+  goal();
+  ball();
+  if(score===true){
+      clearInterval(run);
+    }
+  detectGoal();
   }
 
+function goal(){
+  ctx.save();
+  ctx.beginPath();
+  ctx.arc(goalX, goalY, goalR ,0 ,2*Math.PI, true);
+  ctx.fillStyle = "white";
+  ctx.fill();
+  ctx.restore();
+}
 
 function bridge(){ //Drawn line
     for(i=0; i<path; i++){
+      ctx.save();
       ctx.beginPath();
       ctx.moveTo(bridges[i][0],bridges[i][1]);
       ctx.lineTo(bridges[i][2],bridges[i][3]);
       ctx.lineWidth = 10;
+      ctx.strokeStyle = "white";
       ctx.stroke();
+      ctx.restore();
       if(bridges[i].length=4){
         m = Number(((bridges[i][3] - bridges[i][1])/(bridges[i][2] - bridges[i][0])).toFixed(6)); //Calculates gradient
         c = Number((bridges[i][1] - (m*bridges[i][0])).toFixed(6)); // Calculates y-intercept
@@ -103,47 +124,49 @@ function bridge(){ //Drawn line
   }
 
 function ball(){
+  ctx.save();
   ctx.beginPath();
   ctx.arc(ballX,ballY,ballR,0,2*Math.PI,true);
-  ctx.fillStyle = "rgba(19,191,163,0.75)";
+  ctx.fillStyle = "white";
   ctx.fill();
   ctx.lineWidth = 1;
-  ctx.stroke();
+  // ctx.stroke();
+  ctx.restore();
 
   ctx.save();
   ctx.strokeStyle = "red";
   ctx.strokeRect(ballX, ballY, 1, 1);
   ctx.restore();
 
-  //-----Changes in Y-axis movement
-  vY = Number((vY + gY).toFixed(6));
-  ballY = Number((ballY + vY).toFixed(6));
+    if(start===1){
+      //-----Changes in Y-axis movement
+      vY = Number((vY + gY).toFixed(6));
+      ballY = Number((ballY + vY).toFixed(6));
 
-  //-----Changes in X-axis movement
-  if(aX>0){
-    aX = Number((aX-0.005).toFixed(6));//Air Resistance
-  }
-  else{
-    aX = Number((aX+0.005).toFixed(6));
-  }
-  vX = Number((vX + aX).toFixed(6));
-  ballX = Number((ballX + vX).toFixed(6));
-  // console.log("ballY :"+ballY,"ballX :"+ballX, "vY :"+vY, "vX :"+vX, "gY :"+gY, "aX :"+aX, "m :"+m);
+      //-----Changes in X-axis movement
+      if(aX>0){
+        aX = Number((aX-0.005).toFixed(6));//Air Resistance
+      }
+      else{
+        aX = Number((aX+0.005).toFixed(6));
+      }
+      vX = Number((vX + aX).toFixed(6));
+      ballX = Number((ballX + vX).toFixed(6));
+      // console.log("ballY :"+ballY,"ballX :"+ballX, "vY :"+vY, "vX :"+vX, "gY :"+gY, "aX :"+aX, "m :"+m);
 
-  //------Ball control at bottom edge
-  if((ballY+ballR) >= stageHt){
-    ballY = stageHt-ballR;
-    vY = Number((vY*(-0.8)).toFixed(6));
-    // gY = Number((gY - 0.01).toFixed(6));
+      //------Ball control at bottom edge
+      if((ballY+ballR) >= stageHt){
+        ballY = stageHt-ballR;
+        vY = Number((vY*(-0.8)).toFixed(6));
+        // gY = Number((gY - 0.01).toFixed(6));
 
-    if(vX!=0){
-      vX = Number((vX*0.9).toFixed(6))//Friction Variable
-    }
+        if(vX!=0){
+          vX = Number((vX*0.9).toFixed(6))//Friction Variable
+        }
 
-
-    if((gY>=-1 && gY<1) && (vY>=-0.5 && vY<0.5) && (vX>=-0.3 && vX<0.3) && (aX>=-0.1 && aX<0.1)){
-      clearInterval(run);
-      alert('highest vY = '+test);
+        if((gY>=-1 && gY<1) && (vY>=-0.5 && vY<0.5) && (vX>=-0.3 && vX<0.3) && (aX>=-0.1 && aX<0.1)){
+          clearInterval(run);
+        }
     }
   }
 
@@ -173,15 +196,15 @@ function ball(){
 
       //Influencing ball's velocity in X-direction
 
-      if((ballY+ballR) >= calY && (ballY+ballR)<=(calY+ 30)){
+      if((ballY+ballR) >= calY && (ballY+ballR)<=(calY+ 20)){
         ballY = calY - ballR;//updating ballY to calculated y-position
           if(bridges[i][4]>=0){
             aX = Number((bridges[i][4]*(0.3)).toFixed(6));
-            vX = vX + vX*(0.1);
+            vX = 1;
           }
           else{
             aX = Number((bridges[i][4]*(0.3)).toFixed(6));
-            vX = vx + vX*(-0.1);
+            vX = -1;
           }
 
         //Influencing ball's velocity in Y-direction
@@ -193,13 +216,36 @@ function ball(){
 
 }
 
+function detectGoal(){
+  var deltaX = Math.pow(Number((ballX - goalX).toFixed(6)),2);
+  var deltaY = Math.pow(Number((ballY - goalY).toFixed(6)),2);
+  var pXY = (Math.sqrt((deltaX + deltaY)).toFixed(6));
+  console.log("pXY :" + pXY, " ballY :"+ ballY, "goalY :"+ goalY,"ballX :"+ ballX, "goalX :"+ goalX)
+  if(pXY<(ballR+goalR)-10){
+    ballX = goalX;
+    ballY = goalY;
+    score = true;
+    clearInterval(run);
+    scoreMsg();
+  }
+}
+
+function scoreMsg(){
+  ctx.font = "42px Calibri" ;
+  ctx.fillStyle = "white";
+  ctx.fillText('Score!', (goalX+50), (goalY+50));
+}
+
 function refresh(){
-  ctx.clearRect(0,0,1000,600);
+  ctx.clearRect(0,0,stageWd,stageHt);
 }
 
 function clear(){
-  ctx.clearRect(0,0,1000,600);
-  ballY = 0; ballX = 150; calY = 0;
+  ctx.clearRect(0,0,stageWd,stageHt);
+  ballX = Math.floor(Math.random()*900)+50;
+  ballY = Math.floor(Math.random()*50)+10;
+  goalX = Math.floor(Math.random()*560)+20;
+  goalY = Math.floor(Math.random()*260)+20;
   vY = 1;
   vX = 0;
   gY = 1;
@@ -209,6 +255,7 @@ function clear(){
   bridges=[];
   path = 0;
   clearInterval(run);//clear existing interval to prevent mutiple instances of setInterval()
-  run = setInterval(draw,10);//Re-initiating the intervals.
+  run = setInterval(draw,20);//Re-initiating the intervals.
   start = 0;
+  score = false;
 }
