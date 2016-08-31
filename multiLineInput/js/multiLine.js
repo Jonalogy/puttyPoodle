@@ -8,10 +8,10 @@ var stageWd = document.getElementById('canvas').width;
 var stageHt = document.getElementById('canvas').height;
 
 //-----Bridge-----
-var xStart, yStart;
-var xEnd, yEnd;
 var m;//gradient
 var c;//y coordinate
+var bridges = [];//To store all path coordinates
+var path = [];//To store start & end coordinates for each path
 
 //-----Ball-----
 var ballX = 150;
@@ -32,22 +32,28 @@ $('#canvas').mouseup(lift);
 
 function down (){
   ctx.clearRect(0,0,300,300);
-  xStart = event.clientX;//Obtaining cursor's X and Y coordinates
-  yStart = event.clientY;
-  console.log("MouseDown at: ("+xStart+","+yStart+")" );
+  // xStart = event.clientX;//Obtaining cursor's X and Y coordinates
+  path.push(event.clientX);//Collect start x-cord
+  path.push(event.clientY);//collect start y-cord
+
+  console.log("MouseDown at: " + path );
 }
 
 function lift(){
-  xEnd = event.clientX;//Obtaining cursor's X and Y coordinates
-  yEnd = event.clientY;
-  console.log("Mouseup at: ("+xEnd+","+yEnd+")" );
-  run = setInterval(draw,10);
+  path.push(event.clientX);//collect end X-cord
+  path.push(event.clientY);//collect end Y-cord
+
+  bridges.push(path);// pushing path cords into bridge array for storing
+  path=[];//
+  console.log("Mouseup at: ("+path[2]+","+path[3]+")" );
+  console.log(bridges);
+  // run = setInterval(draw,10);
 }
 
 function draw(){
   refresh();
   bridge();
-  ball();
+  // ball();
 }
 
 
@@ -178,5 +184,6 @@ function clear(){
   aX = 0;
   m = 0;
   c = 0;
+  bridges=[];
   clearInterval(run);
 }
