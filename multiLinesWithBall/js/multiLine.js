@@ -54,7 +54,7 @@ function lift(){
 }
 
 function draw(){
-  refresh();
+  refresh()
   bridge();
   if(start === 1){ball();}
   }
@@ -183,22 +183,31 @@ function ball(){
   //----Bounce with multiple bridges-----
 // debugger
 if(bridges[0]!=undefined){
+  // debugger
+
   for(i=0; i<path; i++){
     //Using ballX to calculate the height ball has to stop
     if(ballX>bridges[i][0] && ballX<bridges[i][2]){
+      console.log("Ball is above path "+ i);
       var calY = Number(((bridges[i][4]*ballX)+bridges[i][5]).toFixed(3));
-    }
+      console.log("Between X1:"+ bridges[i][0] + " , X2:" + bridges[i][2] + ", CalY:" + calY );
 
     //Influencing ball's velocity in X-direction
     if((ballY+ballR) >= calY && (ballY+ballR)<=(calY+15)){
       ballY = calY - ballR;//updating ballY to calculated y-position
-      aX = Number((m*(0.1)).toFixed(6));
-      if(m>=0){vX = 1;}
-      else{vX = -1;}
+        if(bridges[i][4]>=0){
+          aX = Number((bridges[i][4]*(0.1)).toFixed(6));
+          vX = 1;
+        }
+        else{
+          aX = Number((bridges[i][4]*(0.1)).toFixed(6));
+          vX = -1;
+        }
 
       //Influencing ball's velocity in Y-direction
       vY = Number((vY*(-0.9)).toFixed(6));
       }
+    }
   }
 }
 
