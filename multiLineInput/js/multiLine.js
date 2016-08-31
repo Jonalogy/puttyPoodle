@@ -58,7 +58,6 @@ function draw(){
   // ball();
 }
 
-
 function bridge(){ //Drawn line
     for(i=0; i<path; i++){
       ctx.beginPath();

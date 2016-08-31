@@ -2,16 +2,18 @@
 var ctx = document.getElementById('canvas').getContext('2d');
 var clr = document.getElementById('clear').addEventListener('click',clear)
 var run; //For globale setInterval();
+var start = 0;
 
 //-----Stage-----
 var stageWd = document.getElementById('canvas').width;
 var stageHt = document.getElementById('canvas').height;
 
 //-----Bridge-----
-var xStart, yStart;
-var xEnd, yEnd;
 var m;//gradient
 var c;//y coordinate
+var bridges = [];//To store all path coordinates
+var pathXY = [];//To store start & end coordinates for each path
+var path = 0;//To keep count on the number of paths
 
 //-----Ball-----
 var ballX = 150;
@@ -28,38 +30,53 @@ var aX = 0; //Velocity in Y-axis
 //document.body.addEventListener("mousedown",function(){console.log("Click");})
 $('#canvas').mousedown(down);
 $('#canvas').mouseup(lift);
-
+$('#start').click(function(){start = 1});
+//---
+run = setInterval(draw,10);
 
 function down (){
   ctx.clearRect(0,0,300,300);
-  xStart = event.clientX;//Obtaining cursor's X and Y coordinates
-  yStart = event.clientY;
-  console.log("MouseDown at: ("+xStart+","+yStart+")" );
+  // xStart = event.clientX;//Obtaining cursor's X and Y coordinates
+  pathXY.push(event.clientX);//Collect start x-cord
+  pathXY.push(event.clientY);//collect start y-cord
 }
 
 function lift(){
-  xEnd = event.clientX;//Obtaining cursor's X and Y coordinates
-  yEnd = event.clientY;
-  console.log("Mouseup at: ("+xEnd+","+yEnd+")" );
-  run = setInterval(draw,10);
+  pathXY.push(event.clientX);//collect end X-cord
+  pathXY.push(event.clientY);//collect end Y-cord
+  console.log("Coordinates of mousedown and mouseup: " + pathXY);
+
+  bridges.push(pathXY);// pushing path cords into bridge array for storing
+  pathXY=[];//clear array for the next path input
+  path++;//increment path count
+
+  console.log(bridges);
 }
 
 function draw(){
   refresh();
   bridge();
-  ball();
-}
+  if(start === 1){ball();}
+  }
 
 
 function bridge(){ //Drawn line
+    for(i=0; i<path; i++){
+      ctx.beginPath();
+      ctx.moveTo(bridges[i][0],bridges[i][1]);
+      ctx.lineTo(bridges[i][2],bridges[i][3]);
+      ctx.lineWidth = 10;
+      ctx.stroke();
+      if(bridges[i].length=4){
+        m = Number(((bridges[i][3] - bridges[i][1])/(bridges[i][2] - bridges[i][0])).toFixed(6)); //Calculates gradient
+        c = Number((bridges[i][1] - (m*bridges[i][0])).toFixed(6)); // Calculates y-intercept
+        bridges[i].push(m); //Calculates gradient
+        bridges[i].push(c); // Calculates y-intercept
+        m=0;c=0;
+      }
+      console.log(bridges);
 
-    ctx.beginPath();
-    ctx.moveTo(xStart,yStart);
-    ctx.lineTo(xEnd,yEnd);
-    ctx.lineWidth = 10;
-    ctx.stroke();
-    m = Number(((yEnd - yStart)/(xEnd - xStart)).toFixed(6)); //Calculates gradient
-    c = Number((yStart - (m*xStart)).toFixed(6)); // Calculates y-intercept
+      }
 
     //-----The following lines of code is to draw another line within the
     //-----previous one to confirm where the lineWidth is extended from.
@@ -111,8 +128,8 @@ function ball(){
   vX = Number((vX + aX).toFixed(6));
   ballX = Number((ballX + vX).toFixed(6));
 
-  console.log("ballY :"+ballY,"ballX :"+ballX, "vY :"+vY, "vX :"+vX, "gY :"+gY, "aX :"+aX, "m :"+m);
   // console.log("ballY :"+ballY,"ballX :"+ballX, "vY :"+vY, "vX :"+vX, "gY :"+gY, "aX :"+aX, "m :"+m);
+
 
   //------Ball control at bottom edge
   if((ballY+ballR) >= stageHt){
@@ -144,34 +161,48 @@ function ball(){
     vX = Number((vX*(-0.5).toFixed(6)));
     }
 
-  //------Bounce for bridge-----
-  if(ballX>xStart && ballX<xEnd){
-    //Using ballX to calculate the height ball has to stop
-    var calY = Number(((m*ballX)+c).toFixed(3));
-    // console.log("Ball has to stop falling ard ballY = "+calY);
+  // //------Bounce for one bridge-----
+  // if(ballX>xStart && ballX<xEnd){
+  //   //Using ballX to calculate the height ball has to stop
+  //   var calY = Number(((m*ballX)+c).toFixed(3));
+  //   // console.log("Ball has to stop falling ard ballY = "+calY);
+  //
+  //   if((ballY+ballR) >= calY && (ballY+ballR)<=(calY+15)){
+  //     // console.log("ballY :"+ballY , "calY :"+calY);
+  //     ballY = calY - ballR;//updating ballY to calculated y-position
+  //     aX = Number((m*(0.1)).toFixed(6));
+  //     if(m>=0){vX = 1;}
+  //     else{vX = -1;}
+  //
+  //     vY = Number((vY*(-0.9)).toFixed(6));
+  //     // console.log("ballY :"+ballY,"ballX :"+ballX, "m = "+m, "vY :"+vY, "gY :"+gY);
+  //     // clearInterval(run);
+  //   }
+  // }
 
+  //----Bounce with multiple bridges-----
+// debugger
+if(bridges[0]!=undefined){
+  for(i=0; i<path; i++){
+    //Using ballX to calculate the height ball has to stop
+    if(ballX>bridges[i][0] && ballX<bridges[i][2]){
+      var calY = Number(((bridges[i][4]*ballX)+bridges[i][5]).toFixed(3));
+    }
+
+    //Influencing ball's velocity in X-direction
     if((ballY+ballR) >= calY && (ballY+ballR)<=(calY+15)){
-      // console.log("ballY :"+ballY , "calY :"+calY);
       ballY = calY - ballR;//updating ballY to calculated y-position
       aX = Number((m*(0.1)).toFixed(6));
       if(m>=0){vX = 1;}
       else{vX = -1;}
 
+      //Influencing ball's velocity in Y-direction
       vY = Number((vY*(-0.9)).toFixed(6));
-      // gY = Number((gY - 0.0001).toFixed(6));
-      // console.log("ballY :"+ballY,"ballX :"+ballX, "m = "+m, "vY :"+vY, "gY :"+gY);
-      // clearInterval(run);
       }
-    }
-
-  //-----Bounce for Bridge------
-
-  bridges.forEach(function(){
-    if()
-
-  });
-
   }
+}
+
+
 }
 
 function refresh(){
@@ -182,10 +213,14 @@ function clear(){
   ctx.clearRect(0,0,600,300);
   ballY = 0; ballX = 150; calY = 0;
   vY = 1;
-  vX = 0
+  vX = 0;
   gY = 1;
   aX = 0;
   m = 0;
   c = 0;
-  clearInterval(run);
+  bridges=[];
+  path = 0;
+  clearInterval(run);//clear existing interval to prevent mutiple instances of setInterval()
+  run = setInterval(draw,10);//Re-initiating the intervals.
+  start = 0;
 }
