@@ -21,16 +21,26 @@ var xRange, xRangeBegin, xRangeEnd;
 
 //-----Ball-----
   var ballR = 10;
-  var ballX = Math.floor(Math.random()*(stageWd-(ballR*2)))+ballR;
-  var ballY = Math.floor(Math.random()*(stageHt/2)+ballR);
+  var ballX
+  var ballY
   var calY;
 
 //-----Goal-----
-  var goalR = 15;
+  var goalR = 50;
+  var goalX
+  var goalY
+
+//-----Randomly Assiging Ball and Goal's position-----
   do{
-    var goalX = Math.floor(Math.random()*(stageWd-(goalR*2)))+goalR;
-    var goalY = Math.floor(Math.random()*(stageHt-(goalR*2)))+goalR;
-  }while(goalX === ballX);
+        ballX = Math.floor(Math.random()*(stageWd-100))+50;
+        ballY = Math.floor(Math.random()*(stageHt/3))+(30); //Keeping Y to the top of third of the page
+      do{
+        var avoid = stageHt-ballY;//getting the remainging buffer with
+        goalX = Math.floor(Math.random()*(stageWd-(goalR*2)))+goalR;
+        goalY = Math.floor(Math.random()*(stageHt-(stageHt/3))+(stageHt/3));
+      }while(goalX === ballX && goalY<(ballY+150));//Regenerates goal coords if goalY is not 150pts below ballY
+      distance();
+    }while(pXY<250);
 
 
 //-----Distance Varialbles-----
@@ -91,13 +101,16 @@ function draw(){
     parent.removeChild(child);
     pife--;
     start = 0;
+    if(pife === 0){
+      refresh()
+      document.getElementById('pife').innerHTML = "<div id=\"pife\">Retry!</div>";
+      ctx.font = "100px 'Gloria Hallelujah'" ;
+      ctx.fillStyle = "white";
+      ctx.fillText("AWW...", 400,280);
+      clearInterval(run);
+    }
     clearInterval(run);
   }
-  else if(start === 2 && pife!=0){
-
-  }
-
-
   ball();
   detectGoal();
   }
@@ -170,6 +183,12 @@ function ball(){
         }
     }
   }
+
+  //-----Ball control after colliding Top edge
+  if((ballY-ballR) < 0){
+    document.getElementById('pop').play();
+    avY = Number((vY*(-0.8)).toFixed(6));
+    }
 
   //-----Ball control after colliding right edge
   if((ballX+ballR) >= stageWd){
@@ -277,12 +296,15 @@ function distance(){ // To calculated the distance between the ball and the goal
 function scoreMsg(){
 
   document.getElementById('taDa').play();
+  if (goalR>15){
+      goalR-=5;//Reduces Goal size
+    }
 
   ctx.font = "42px 'Gloria Hallelujah'" ;
   ctx.fillStyle = "white";
 
   //-----To ensure proper display of code-----
-  if(goalX>(stageWd-150) && goalY<(80)){ //Right Top Corner
+    if(goalX>(stageWd-150) && goalY<80){ //Right Top Corner
     ctx.fillText('Popsicles!', (goalX-200), (goalY+80));
   }
   else if(goalX>(stageWd-150) && goalY>(stageHt-80) ){// Right Bottom Corner
@@ -292,50 +314,55 @@ function scoreMsg(){
     ctx.fillText('Popsicles!', (goalX-200), (goalY-40));
   }
   else if(goalX<80 && goalY<80){//Left Top Corner
-    ctx.fillText('Popsicles!', (goalX+50), (goalY+50));
+    ctx.fillText('Popsicles!', (goalX+70), (goalY+50));
   }
   else if(goalX<80 && goalY>(stageHt-80)){//Left Bottom Corner
-    ctx.fillText('Popsicles!', (goalX+50), (goalY-50));
+    ctx.fillText('Popsicles!', (goalX+70), (goalY-50));
   }
   else if(goalX<80){ // Along left Edge
-    ctx.fillText('Popsicles!', (goalX+40), (goalY-25));
+    ctx.fillText('Popsicles!', (goalX+70), (goalY-25));
   }
-  else if(goalY<450){//Along bottom Edge
-    ctx.fillText('Popsicles!', (goalX), (goalY-50));
+  else if(goalY>400){//Along bottom Edge
+    ctx.fillText('Popsicles!', (goalX), (goalY-100));
+  }
+  else if(goalY<80){//Along top Edge
+    ctx.fillText('Popsicles!', (goalX), (goalY+100));
   }
   else{
-    ctx.fillText('Popsicles!', (goalX+50), (goalY+50));
+    ctx.fillText('Popsicles!', (goalX-100), (goalY-80));
   }
-
 }
 
 function miss(){
   ctx.font = "42px 'Gloria Hallelujah'" ;
   ctx.fillStyle = "white";
 
-  if(goalX>(stageWd-150) && goalY<(80)){ //Right Top Corner
+  if(goalX>(stageWd-150) && goalY<80){ //Right Top Corner
     ctx.fillText('I\'m here ~', (goalX-200), (goalY+80));
   }
   else if(goalX>(stageWd-150) && goalY>(stageHt-80) ){// Right Bottom Corner
     ctx.fillText('I\'m here ~', (goalX-200), (goalY- 60));
   }
-  else if(goalX>(stageWd-80)){//Along Right Edge
+  else if(goalX>(stageWd-150)){//Along Right Edge
     ctx.fillText('I\'m here ~', (goalX-200), (goalY-40));
   }
   else if(goalX<80 && goalY<80){//Left Top Corner
-    ctx.fillText('I\'m here ~', (goalX+50), (goalY+50));
+    ctx.fillText('I\'m here ~', (goalX+70), (goalY+50));
   }
   else if(goalX<80 && goalY>(stageHt-80)){//Left Bottom Corner
-    ctx.fillText('I\'m here ~', (goalX+50), (goalY-50));
+    ctx.fillText('I\'m here ~', (goalX+70), (goalY-50));
   }
   else if(goalX<80){ // Along left Edge
-    ctx.fillText('I\'m here ~', (goalX+40), (goalY-25));
+    ctx.fillText('I\'m here ~', (goalX+70), (goalY-25));
   }
-  else if(goalY<450){//Along bottom Edge
-    ctx.fillText('I\'m here ~', (goalX), (goalY-50));
+  else if(goalY>400){//Along bottom Edge
+    ctx.fillText('I\'m here ~', (goalX), (goalY-100));
+  }
+  else if(goalY<80){//Along top Edge
+    ctx.fillText('I\'m here ~', (goalX), (goalY+100));
   }
   else{
-    ctx.fillText('I\'m here ~', (goalX+50), (goalY+50));
+    ctx.fillText('I\'m here ~', (goalX - 100), (goalY-80));
   }
 }
 
@@ -356,7 +383,7 @@ function clear(){
         goalY = Math.floor(Math.random()*(stageHt-(stageHt/3))+(stageHt/3));
       }while(goalX === ballX && goalY<(ballY+150));//Regenerates goal coords if goalY is not 150pts below ballY
 
-        distance();
+      distance();
 
     }while(pXY<250);
     distance();
@@ -378,6 +405,8 @@ function clear(){
 }
 
 function retry() {
+  document.getElementById('pife').innerHTML = "<div id=\"pife\">Pife: </div>";
+
   if(pife<3){
     var child;
     for(i=1;i<(4-pife);i++){
@@ -389,4 +418,6 @@ function retry() {
     document.getElementById('pts').innerHTML="<span id='pts'>"+pts+"<span>";
 
   }
+  goalR = 50;
+  clear();
 }
