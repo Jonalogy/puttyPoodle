@@ -15,11 +15,13 @@ var c;//y coordinate
 var bridges = [];//To store all path coordinates
 var pathXY = [];//To store start & end coordinates for each path
 var path = 0;//To keep count on the number of paths
+var xRange, xRangeBegin, xRangeEnd;
 
 //-----Ball-----
   var ballR = 10;
   var ballX = Math.floor(Math.random()*(stageWd-(ballR*2)))+ballR;
   var ballY = Math.floor(Math.random()*(stageHt/2)+ballR);
+  var calY;
 
 //-----Goal-----
   var goalR = 15
@@ -185,17 +187,24 @@ function ball(){
   //----Bounce with multiple bridges-----
   if(bridges[0]!=undefined){
     for(i=0; i<path; i++){
-      //Using ballX to calculate the height ball has to stop
-      if(ballX>bridges[i][0] && ballX<bridges[i][2]){
+
+      if(bridges[i][0]<=bridges[i][2]){ xRangeBegin = bridges[i][0]}
+      else if(bridges[i][2]<bridges[i][0]){xRangeBegin = bridges[i][2]}
+
+      xRange = Math.abs(Number(bridges[i][2] - bridges[i][0]).toFixed(6)); //Finding the absolute distance between xStart and xEnd.
+      xRangeEnd = xRangeBegin + xRange;//Finds end of range.
+
+      if(ballX>xRangeBegin && ballX<xRangeEnd){
         console.log("Ball is above path "+ i);
-        var calY = Number(((bridges[i][4]*ballX)+bridges[i][5]).toFixed(3));
+        //Using ballX to calculate the height ball has to stop
+        calY = Number(((bridges[i][4]*ballX)+bridges[i][5]).toFixed(3));
         console.log("Between X1:"+ bridges[i][0] + " , X2:" + bridges[i][2] + ", CalY:" + calY );
         console.log("vX: "+ vX + " , vY:" + vY);
 
 
       //Influencing ball's velocity in X-direction
 
-      if((ballY+ballR) >= (calY-5) && (ballY+ballR)<=(calY+ 17)){
+      if((ballY+ballR) > (calY-5)){
         ballY = calY - ballR;//updating ballY to calculated y-position
           if(bridges[i][4]>=0){
 
@@ -231,7 +240,7 @@ function ball(){
 
 function detectGoal(){
   distance();
-  console.log("pXY :" + pXY, " ballY :"+ ballY, "goalY :"+ goalY,"ballX :"+ ballX, "goalX :"+ goalX)
+  console.log("pXY :" + pXY, " ballY :"+ ballY, "ballX :"+ ballX, "calY : "+ calY, "goalY :"+ goalY, "goalX :"+ goalX);
   if(pXY<(ballR+goalR)-10){
     ballX = goalX;
     ballY = goalY;
@@ -258,8 +267,8 @@ function refresh(){
 
 function clear(){
   ctx.clearRect(0,0,stageWd,stageHt);
-  ballX = Math.floor(Math.random()*900)+50;
-  ballY = Math.floor(Math.random()*50)+10;
+  ballX = Math.floor(Math.random()*(stageWd-(ballR*2)))+ballR;
+  ballY = Math.floor(Math.random()*(stageHt/2)+ballR);
   goalX = Math.floor(Math.random()*560)+20;
   goalY = Math.floor(Math.random()*260)+20;
   vY = 1;
