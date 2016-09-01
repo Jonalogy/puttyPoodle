@@ -1,0 +1,115 @@
+#contain{
+  text-align: center;
+}
+
+#leftHead, #gameTitle, #rightHead{
+  font-family: 'Baloo Paaji', cursive;
+  display: inline-block;
+  /*border: 1px solid black;*/
+  color: white;
+}
+
+#gameTitle{
+  font-size: 60px;
+  margin: 0;
+  padding: 0;
+}
+
+#leftHead, #rightHead{
+  width: 300px;
+}
+
+#leftHead{
+  font-size: 30px;
+}
+
+#pife{
+  height: 20px;
+  width: 20px;
+  font-size: 30px;
+  margin-right: 50px;
+  display: inline-block;
+  /*border: 1px black solid;*/
+}
+
+#score{
+  height: 20px;
+  width: 20px;
+  font-size: 30px;
+  margin-right: 50px
+  border: 1px black solid;
+}
+
+.lives{
+  height: 30px;
+  width: 30px;
+  border-radius: 30px;
+  background-color: white;
+  display: inline-block;
+  margin: 0px 5px;
+}
+
+.spacer{
+  height: 30px;
+  width: 30px;
+  border-radius: 30px;
+  display: inline-block;
+  margin: 0px 5px;
+}
+
+#control{
+  display:inline-block;
+}
+#board{
+  margin: auto;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+}
+
+.dashBoard{
+  /*border: 1px solid red;*/
+  height: 300px;
+  width: 100px;
+}
+
+#dashBoard1{
+  order: 1;
+  flex-grow: 1;
+}
+
+#canvas{
+   #4BDAE3;
+  border: 20px white solid;
+  border-radius: 20px;
+  order: 2;
+}
+
+#dashBoard2{
+  order: 3;
+  flex-grow: 1;
+  /*background-color: rgba(20, 18, 21, 0.93);*/
+}
+
+
+
+.butts{
+  border: none;
+  height: 35px;
+  width: 100px;
+  border-radius: 20px;
+  background-color: white;
+  margin: 10px; 10px;
+  color: #4BDAE3;
+  display: inline-block;
+  font-size: 20px;
+  font-family: 'Baloo Paaji', cursive;
+}
+
+html{
+  position: relative;
+}
+
+body{
+  background-color: #4BDAE3
+}

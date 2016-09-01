@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Putty Poodle Beta</title>
+    <link href="https://fonts.googleapis.com/css?family=Baloo+Paaji" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Gloria+Hallelujah" rel="stylesheet">    <link rel="stylesheet" href="style.css">
+    <audio id="pop" src="audio/pop.mp3"></audio>
+    <audio id="taDa" src="audio/taDa.mp3"></audio>
+  </head>
+  <body>
+    <div id="contain">
+      <div id="headBoard">
+        <div id="leftHead">
+          Points: <span id="pts">0</span>
+        </div>
+          <h1 id="gameTitle">Putty Poodle</h1>
+          <div id="rightHead">
+            <div id="pife">Pife: </div>
+            <div id="life1" class="lives"></div>
+            <div id="life2" class="lives"></div>
+            <div id="life3" class="lives"></div>
+          </div>
+      </div>
+      <div id="board">
+          <div id="dashBoard1" class="dashBoard">
+
+          </div>
+          <canvas id="canvas" width="1000" height="500"></canvas>
+          <div id="dashBoard2" class="dashBoard">
+
+          </div>
+      </div>
+      <div id="control">
+        <button type="button" id="start" class="butts">Start</button>
+        <button type="button" id="clear" class="butts">Clear</button>
+        <button type="button" id="retry" class="butts">Retry</button>
+      </div>
+    </div>
+  </body>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+  <script type="text/javascript" src="js/poodle.js"></script>
+</html>
