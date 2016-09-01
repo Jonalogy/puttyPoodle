@@ -191,7 +191,8 @@ function ball(){
       //Influencing ball's velocity in X-direction
 
       if((ballY+ballR) > (calY-5) && (ballY+ballR) < (calY+20)){
-        ballY = calY - (ballR+2);//updating ballY to calculated y-position
+          document.getElementById('pop').play();
+          ballY = calY - (ballR+2);//updating ballY to calculated y-position
           if(bridges[i][4]>=0){
 
             if(vX<0.3){
