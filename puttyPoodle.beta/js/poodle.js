@@ -43,6 +43,7 @@ var xRange, xRangeBegin, xRangeEnd;
   var aX = 0; //Velocity in Y-axis
 
 //----Event Listeners-----
+
   $('#canvas').mousedown(down);
   $('#canvas').mouseup(lift);
   $('#start').click(function(){start = 1;});
@@ -52,20 +53,25 @@ var xRange, xRangeBegin, xRangeEnd;
   run = setInterval(draw,20);
 
 function down(){
-  var top = document.getElementById('canvas').offsetTop;
-  var left = document.getElementById('canvas').offsetLeft;
-  pathXY.push((event.clientX)-left);//Collect start x-cord
-  pathXY.push((event.clientY)-top);//collect start y-cord
+  if(start!=1){
+    var top = document.getElementById('canvas').offsetTop;
+    var left = document.getElementById('canvas').offsetLeft;
+    pathXY.push((event.clientX)-left);//Collect start x-cord
+    pathXY.push((event.clientY)-top);//collect start y-cord
+  }
 }
 
 function lift(){
-  var top = document.getElementById('canvas').offsetTop;
-  var left = document.getElementById('canvas').offsetLeft;
-  pathXY.push((event.clientX)-left);//collect end X-cord
-  pathXY.push((event.clientY)-top);//collect end Y-cord
-  bridges.push(pathXY);// pushing path cords into bridge array for storing
-  pathXY=[];//clear array for the next path input
-  path++;//increment path count
+
+  if(start!=1){
+    var top = document.getElementById('canvas').offsetTop;
+    var left = document.getElementById('canvas').offsetLeft;
+    pathXY.push((event.clientX)-left);//collect end X-cord
+    pathXY.push((event.clientY)-top);//collect end Y-cord
+    bridges.push(pathXY);// pushing path cords into bridge array for storing
+    pathXY=[];//clear array for the next path input
+    path++;//increment path count
+  }
 }
 
 function draw(){
@@ -78,15 +84,20 @@ function draw(){
       pts++;
       document.getElementById('pts').innerHTML="<span id='pts'>"+pts+"<span>";
     }
-  if(start===2){
+  if(start===2 && pife!=0){
     miss()
     var child = document.getElementById('life' + pife)
     var parent = document.getElementById('rightHead')
     parent.removeChild(child);
     pife--;
-    clearInterval(run);
     start = 0;
+    clearInterval(run);
   }
+  else if(start === 2 && pife!=0){
+
+  }
+
+
   ball();
   detectGoal();
   }
