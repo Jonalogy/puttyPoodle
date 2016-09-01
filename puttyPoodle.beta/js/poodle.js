@@ -106,7 +106,7 @@ function draw(){
       document.getElementById('pife').innerHTML = "<div id=\"pife\">Retry!</div>";
       ctx.font = "100px 'Gloria Hallelujah'" ;
       ctx.fillStyle = "white";
-      ctx.fillText("AWW...", 400,280);
+      ctx.fillText("AWW...", 380,280);
       clearInterval(run);
     }
     clearInterval(run);
