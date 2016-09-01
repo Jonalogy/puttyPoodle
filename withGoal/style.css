@@ -5,24 +5,59 @@
   font-family: 'Baloo Paaji', cursive;
   color: white;
   font-size: 50px;
-  /*border: 1px solid red;*/
   margin: 0;
   padding: 0;
 }
 #control{
   display:inline-block;
 }
-
 #board{
   margin: auto;
-  position: relative;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+}
 
+.dashBoard{
+  /*border: 1px solid red;*/
+  height: 300px;
+  width: 100px;
+}
+
+#dashBoard1{
+  order: 1;
+  flex-grow: 1;
 }
 
 #canvas{
-  background-color: #4BDAE3;
+   #4BDAE3;
   border: 20px white solid;
   border-radius: 20px;
+  order: 2;
+}
+
+#dashBoard2{
+  order: 3;
+  flex-grow: 1;
+  /*background-color: rgba(20, 18, 21, 0.93);*/
+
+}
+
+.butts{
+  border: none;
+  height: 35px;
+  width: 100px;
+  border-radius: 20px;
+  background-color: white;
+  margin: 10px; 10px;
+  color: #4BDAE3;
+  display: inline-block;
+  font-size: 20px;
+  font-family: 'Baloo Paaji', cursive;
+}
+
+#id{
+
 }
 
 html{

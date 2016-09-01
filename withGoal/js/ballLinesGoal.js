@@ -17,14 +17,18 @@ var pathXY = [];//To store start & end coordinates for each path
 var path = 0;//To keep count on the number of paths
 
 //-----Ball-----
-  var ballX = Math.floor(Math.random()*900)+50;
-  var ballY = Math.floor(Math.random()*50)+10;
   var ballR = 10;
+  var ballX = Math.floor(Math.random()*(stageWd-(ballR*2)))+ballR;
+  var ballY = Math.floor(Math.random()*(stageHt/2)+ballR);
 
 //-----Goal-----
-  var goalX = Math.floor(Math.random()*560)+20;
-  var goalY = Math.floor(Math.random()*260)+20;
-  var goalR = 15;
+  var goalR = 15
+  var goalX = Math.floor(Math.random()*(stageWd-(goalR*2)))+goalR;
+  var goalY = Math.floor(Math.random()*(stageHt-(goalR*2)))+goalR;
+
+//-----Distance Varialbles-----
+  var deltaX, deltaY, pXY;
+  distance();
 
 //----Gravity-----
   var vY = 1;
@@ -55,18 +59,16 @@ function lift(){
   bridges.push(pathXY);// pushing path cords into bridge array for storing
   pathXY=[];//clear array for the next path input
   path++;//increment path count
-
-  console.log(bridges);
 }
 
 function draw(){
   refresh();
   bridge();
   goal();
-  ball();
   if(score===true){
       clearInterval(run);
     }
+  ball();
   detectGoal();
   }
 
@@ -96,9 +98,7 @@ function bridge(){ //Drawn line
         bridges[i].push(c); // Calculates y-intercept
         m=0;c=0;
       }
-      console.log(bridges);
-
-      }
+    }
 
     //-----The following lines of code is to draw another line within the
     //-----previous one to confirm where the lineWidth is extended from.
@@ -152,13 +152,11 @@ function ball(){
       }
       vX = Number((vX + aX).toFixed(6));
       ballX = Number((ballX + vX).toFixed(6));
-      // console.log("ballY :"+ballY,"ballX :"+ballX, "vY :"+vY, "vX :"+vX, "gY :"+gY, "aX :"+aX, "m :"+m);
 
       //------Ball control at bottom edge
       if((ballY+ballR) >= stageHt){
         ballY = stageHt-ballR;
         vY = Number((vY*(-0.8)).toFixed(6));
-        // gY = Number((gY - 0.01).toFixed(6));
 
         if(vX!=0){
           vX = Number((vX*0.9).toFixed(6))//Friction Variable
@@ -194,17 +192,32 @@ function ball(){
         console.log("Between X1:"+ bridges[i][0] + " , X2:" + bridges[i][2] + ", CalY:" + calY );
         console.log("vX: "+ vX + " , vY:" + vY);
 
+
       //Influencing ball's velocity in X-direction
 
-      if((ballY+ballR) >= calY && (ballY+ballR)<=(calY+ 20)){
+      if((ballY+ballR) >= (calY-5) && (ballY+ballR)<=(calY+ 17)){
         ballY = calY - ballR;//updating ballY to calculated y-position
           if(bridges[i][4]>=0){
-            aX = Number((bridges[i][4]*(0.3)).toFixed(6));
-            vX = 1;
+
+            if(vX===0){
+              aX = Number((bridges[i][4]*(0.3)).toFixed(6));
+              vX = 1;
+            }
+            else{
+              aX = Number((bridges[i][4]*(0.3)).toFixed(6));
+              vX = Number((vX*1.1).toFixed(6));
+            }
+
           }
           else{
-            aX = Number((bridges[i][4]*(0.3)).toFixed(6));
-            vX = -1;
+            if(vX===0){
+              aX = Number((bridges[i][4]*(0.3)).toFixed(6));
+              vX = -1;
+            }
+            else{
+              aX = Number((bridges[i][4]*(0.3)).toFixed(6));
+              vX = Number((vX*1.1).toFixed(6));
+            }
           }
 
         //Influencing ball's velocity in Y-direction
@@ -217,17 +230,20 @@ function ball(){
 }
 
 function detectGoal(){
-  var deltaX = Math.pow(Number((ballX - goalX).toFixed(6)),2);
-  var deltaY = Math.pow(Number((ballY - goalY).toFixed(6)),2);
-  var pXY = (Math.sqrt((deltaX + deltaY)).toFixed(6));
+  distance();
   console.log("pXY :" + pXY, " ballY :"+ ballY, "goalY :"+ goalY,"ballX :"+ ballX, "goalX :"+ goalX)
   if(pXY<(ballR+goalR)-10){
     ballX = goalX;
     ballY = goalY;
     score = true;
-    clearInterval(run);
     scoreMsg();
   }
+}
+
+function distance(){ // To calculated the distance between the ball and the goal
+  deltaX = Math.pow(Number((ballX - goalX).toFixed(6)),2);
+  deltaY = Math.pow(Number((ballY - goalY).toFixed(6)),2);
+  pXY = (Math.sqrt((deltaX + deltaY)).toFixed(6));
 }
 
 function scoreMsg(){
