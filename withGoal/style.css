@@ -19,16 +19,25 @@
   width: 300px;
 }
 
+#leftHead{
+  font-size: 30px;
+}
+
 #pife{
   height: 20px;
   width: 20px;
   font-size: 30px;
   margin-right: 50px;
   display: inline-block;
+  /*border: 1px black solid;*/
 }
 
-#lvl{
+#score{
+  height: 20px;
+  width: 20px;
   font-size: 30px;
+  margin-right: 50px
+  border: 1px black solid;
 }
 
 .lives{
@@ -36,6 +45,14 @@
   width: 30px;
   border-radius: 30px;
   background-color: white;
+  display: inline-block;
+  margin: 0px 5px;
+}
+
+.spacer{
+  height: 30px;
+  width: 30px;
+  border-radius: 30px;
   display: inline-block;
   margin: 0px 5px;
 }

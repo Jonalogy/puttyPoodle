@@ -8,7 +8,8 @@ var start = 0;
 var stageWd = document.getElementById('canvas').width;
 var stageHt = document.getElementById('canvas').height;
 var score = false;
-var pife = 3;
+var pife = 3; // Number of tries you have,
+var pts = 0;
 
 //-----Bridge-----
 var m;//gradient
@@ -25,7 +26,7 @@ var xRange, xRangeBegin, xRangeEnd;
   var calY;
 
 //-----Goal-----
-  var goalR = 15
+  var goalR = 15;
   var goalX = Math.floor(Math.random()*(stageWd-(goalR*2)))+goalR;
   var goalY = Math.floor(Math.random()*(stageHt-(goalR*2)))+goalR;
 
@@ -42,6 +43,7 @@ var xRange, xRangeBegin, xRangeEnd;
   $('#canvas').mousedown(down);
   $('#canvas').mouseup(lift);
   $('#start').click(function(){start = 1;});
+  $("#retry").on("click", retry)
 
 //---Interval---
   run = setInterval(draw,20);
@@ -69,10 +71,14 @@ function draw(){
   goal();
   if(score===true){
       clearInterval(run);
+      scoreMsg();
+      pts++;
+      document.getElementById('pts').innerHTML="<span id='pts'>"+pts+"<span>";
     }
   if(start===2){
+    miss()
     var child = document.getElementById('life' + pife)
-    var parent = document.getElementById('leftHead')
+    var parent = document.getElementById('rightHead')
     parent.removeChild(child);
     pife--;
     clearInterval(run);
@@ -81,15 +87,6 @@ function draw(){
   ball();
   detectGoal();
   }
-
-function goal(){
-  ctx.save();
-  ctx.beginPath();
-  ctx.arc(goalX, goalY, goalR ,0 ,2*Math.PI, true);
-  ctx.fillStyle = "white";
-  ctx.fill();
-  ctx.restore();
-}
 
 function bridge(){ //Drawn line
     for(i=0; i<path; i++){
@@ -143,6 +140,11 @@ function ball(){
 
       //------Ball control at bottom edge
       if((ballY+ballR) >= stageHt){
+
+        if(vY>2 || vY<-2){
+          document.getElementById('pop').play();
+        }
+
         ballY = stageHt-ballR;
         vY = Number((vY*(-0.8)).toFixed(6));
 
@@ -158,6 +160,7 @@ function ball(){
 
   //-----Ball control after colliding right edge
   if((ballX+ballR) >= stageWd){
+    document.getElementById('pop').play();
     ballX = stageWd-ballR;
     aX = Number((m*(-0.01)).toFixed(6));
     vX = Number((vX*(-0.5).toFixed(6)));
@@ -165,6 +168,7 @@ function ball(){
 
   //-----Ball control after colliding left edge
   if((ballX-ballR) <= 0){
+    document.getElementById('pop').play();
     ballX = ballR+0;
     aX = Number((m*(-0.01)).toFixed(6));
     vX = Number((vX*(-0.5).toFixed(6)));
@@ -191,7 +195,9 @@ function ball(){
       //Influencing ball's velocity in X-direction
 
       if((ballY+ballR) > (calY-5) && (ballY+ballR) < (calY+20)){
-          document.getElementById('pop').play();
+          if(vY>3 || vY<-3){
+            document.getElementById('pop').play();
+          }
           ballY = calY - (ballR+2);//updating ballY to calculated y-position
           if(bridges[i][4]>=0){
 
@@ -226,8 +232,19 @@ function ball(){
 
   if(ballY>=488 && (vX<0.05 && vX>-0.05)){
     start  = 2;
-    miss();
   }
+}
+
+function goal(){
+  ctx.save();
+  ctx.beginPath();
+  ctx.arc(goalX, goalY, goalR ,0 ,2*Math.PI, true);
+  ctx.strokeStyle = "white";
+  ctx.lineWidth = 8;
+  ctx.stroke();
+  // ctx.fillStyle = "white";
+  // ctx.fill();
+  ctx.restore();
 }
 
 function detectGoal(){
@@ -237,7 +254,6 @@ function detectGoal(){
     ballX = goalX;
     ballY = goalY;
     score = true;
-    scoreMsg();
   }
 }
 
@@ -248,15 +264,62 @@ function distance(){ // To calculated the distance between the ball and the goal
 }
 
 function scoreMsg(){
-  ctx.font = "42px Calibri" ;
+
+  document.getElementById('taDa').play();
+
+  ctx.font = "42px 'Gloria Hallelujah'" ;
   ctx.fillStyle = "white";
-  ctx.fillText('Score!', (goalX+50), (goalY+50));
+
+  //-----To ensure proper display of code-----
+  if(goalX>(stageWd-80) && goalY<(80)){ //Right Top Corner
+    ctx.fillText('Popsicles!', (goalX-200), (goalY+80));
+  }
+  else if(goalX>(stageWd-80) && goalY>(stageHt-80) ){// Right Bottom Corner
+    ctx.fillText('Popsicles!', (goalX-200), (goalY- 60));
+  }
+  else if(goalX>(stageWd-80)){//Along Right Edge
+    ctx.fillText('Popsicles!', (goalX-200), (goalY-40));
+  }
+  else if(goalX<80 && goalY<80){//Left Top Corner
+    ctx.fillText('Popsicles!', (goalX+50), (goalY+50));
+  }
+  else if(goalX<80 && goalY>(stageHt-80)){//Left Bottom Corner
+    ctx.fillText('Popsicles!', (goalX+50), (goalY-50));
+  }
+  else if(goalX<80){ // Along left Edge
+    ctx.fillText('Popsicles!', (goalX+40), (goalY-25));
+  }
+  else{
+    ctx.fillText('Popsicles!', (goalX+50), (goalY+50));
+  }
+
 }
 
 function miss(){
-  ctx.font = "42px Calibri" ;
+  ctx.font = "42px 'Gloria Hallelujah'" ;
   ctx.fillStyle = "white";
-  ctx.fillText('I\'m here~', (goalX+50), (goalY+50));
+
+  if(goalX>(stageWd-80) && goalY<(80)){ //Right Top Corner
+    ctx.fillText('I\'m here ~', (goalX-200), (goalY+80));
+  }
+  else if(goalX>(stageWd-80) && goalY>(stageHt-80) ){// Right Bottom Corner
+    ctx.fillText('I\'m here ~', (goalX-200), (goalY- 60));
+  }
+  else if(goalX>(stageWd-80)){//Along Right Edge
+    ctx.fillText('I\'m here ~', (goalX-200), (goalY-40));
+  }
+  else if(goalX<80 && goalY<80){//Left Top Corner
+    ctx.fillText('I\'m here ~', (goalX+50), (goalY+50));
+  }
+  else if(goalX<80 && goalY>(stageHt-80)){//Left Bottom Corner
+    ctx.fillText('I\'m here ~', (goalX+50), (goalY-50));
+  }
+  else if(goalX<80){ // Along left Edge
+    ctx.fillText('I\'m here ~', (goalX+40), (goalY-25));
+  }
+  else{
+    ctx.fillText('I\'m here ~', (goalX+50), (goalY+50));
+  }
 }
 
 function refresh(){
@@ -267,7 +330,8 @@ function clear(){
   ctx.clearRect(0,0,stageWd,stageHt);
   ballX = Math.floor(Math.random()*(stageWd-(ballR*2)))+ballR;
   ballY = Math.floor(Math.random()*(stageHt/2)+ballR);
-  goalX = Math.floor(Math.random()*560)+20;
+  goalX = ballX;
+  // goalX = Math.floor(Math.random()*560)+20;
   goalY = Math.floor(Math.random()*260)+20;
   vY = 1;
   vX = 0;
@@ -284,15 +348,12 @@ function clear(){
 }
 
 function resetPife(){
-    var parent = document.getElementById('leftHead');
+    var parent = document.getElementById('rightHead');
     var newChild = document.createElement('div')
 
 }
 
-
-
-$("#add").on("click", addBalls)
-function addBalls () {
+function retry() {
   if(pife<3){
     var child;
     for(i=1;i<(4-pife);i++){
@@ -300,5 +361,8 @@ function addBalls () {
       child.insertAfter("#pife");
     }
     pife = 3;
+    pts = 0;
+    document.getElementById('pts').innerHTML="<span id='pts'>"+pts+"<span>";
+
   }
 }
