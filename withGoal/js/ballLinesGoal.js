@@ -8,6 +8,7 @@ var start = 0;
 var stageWd = document.getElementById('canvas').width;
 var stageHt = document.getElementById('canvas').height;
 var score = false;
+var pife = 3;
 
 //-----Bridge-----
 var m;//gradient
@@ -30,11 +31,10 @@ var xRange, xRangeBegin, xRangeEnd;
 
 //-----Distance Varialbles-----
   var deltaX, deltaY, pXY;
-  distance();
 
 //----Gravity-----
   var vY = 1;
-  var gY = 0.1;
+  var gY = 1;
   var vX = 0; // Velocity in X-axis
   var aX = 0; //Velocity in Y-axis
 
@@ -44,7 +44,7 @@ var xRange, xRangeBegin, xRangeEnd;
   $('#start').click(function(){start = 1;});
 
 //---Interval---
-// run = setInterval(draw,20);
+  run = setInterval(draw,20);
 
 function down(){
   var top = document.getElementById('canvas').offsetTop;
@@ -70,6 +70,14 @@ function draw(){
   if(score===true){
       clearInterval(run);
     }
+  if(start===2){
+    var child = document.getElementById('life' + pife)
+    var parent = document.getElementById('leftHead')
+    parent.removeChild(child);
+    pife--;
+    clearInterval(run);
+    start = 0;
+  }
   ball();
   detectGoal();
   }
@@ -101,28 +109,6 @@ function bridge(){ //Drawn line
         m=0;c=0;
       }
     }
-
-    //-----The following lines of code is to draw another line within the
-    //-----previous one to confirm where the lineWidth is extended from.
-    // ctx.beginPath();
-    // ctx.moveTo(xStart,yStart);
-    // ctx.lineTo(xEnd,yEnd);
-    // ctx.lineWidth = 1;
-    // ctx.strokeStyle = 'red';
-    // ctx.stroke();
-
-    // console.log("Gradient =" + m, "C :" + c  );
-    //----The following are test codes to test out line equation in the game.
-    //----Note that gradient values in canvas are negative of gradients drawn in reality
-    //----Reason is in <canvas> the coordinates below the origin are considered positive values.
-    // var tX, tY, tXX, tYY;
-    // tY = yStart + 50;//displace line to test gradient
-    // tX = xStart; tXX = xEnd;
-    // tYY = (m*tXX) + (c+50);
-    // ctx.beginPath();
-    // ctx.moveTo(tX,tY);
-    // ctx.lineTo(tXX,tYY);
-    // ctx.stroke();
   }
 
 function ball(){
@@ -145,7 +131,7 @@ function ball(){
       vY = Number((vY + gY).toFixed(6));
       ballY = Number((ballY + vY).toFixed(6));
 
-      //-----Changes in X-axis movement
+      //-----Changes in X-axis in air
       if(aX>0){
         aX = Number((aX-0.01).toFixed(6));//Air Resistance
       }
@@ -231,17 +217,21 @@ function ball(){
 
         //Influencing ball's velocity in Y-direction
           vY = Number((vY*(-1)).toFixed(6));
-          // vY = Number((vY*(-0.98)).toFixed(6));
           }
         }
       }
     }
 
+
+  if(ballY>=488 && (vX<0.05 && vX>-0.05)){
+    start  = 2;
+    miss();
+  }
 }
 
 function detectGoal(){
   distance();
-  console.log("pXY :" + pXY, " ballY :"+ ballY, "ballX :"+ ballX, "calY : "+ calY, "goalY :"+ goalY, "goalX :"+ goalX, "vY :"+vY, "vX : "+vX);
+  console.log("pXY :" + pXY, " ballY :"+ ballY, "ballX :"+ ballX, "calY : "+ calY, "goalY :"+ goalY, "goalX :" + goalX, "vY :" + vY, "vX : "+vX);
   if(pXY<(ballR+goalR)-10){
     ballX = goalX;
     ballY = goalY;
@@ -260,6 +250,12 @@ function scoreMsg(){
   ctx.font = "42px Calibri" ;
   ctx.fillStyle = "white";
   ctx.fillText('Score!', (goalX+50), (goalY+50));
+}
+
+function miss(){
+  ctx.font = "42px Calibri" ;
+  ctx.fillStyle = "white";
+  ctx.fillText('I\'m here~', (goalX+50), (goalY+50));
 }
 
 function refresh(){
@@ -284,4 +280,24 @@ function clear(){
   run = setInterval(draw,20);//Re-initiating the intervals.
   start = 0;
   score = false;
+}
+
+function resetPife(){
+    var parent = document.getElementById('leftHead');
+    var newChild = document.createElement('div')
+
+}
+
+
+
+$("#add").on("click", addBalls)
+function addBalls () {
+  if(pife<3){
+    var child;
+    for(i=1;i<(4-pife);i++){
+      child = $("<div>").addClass("lives").attr("id","life"+i);
+      child.insertAfter("#pife");
+    }
+    pife = 3;
+  }
 }
