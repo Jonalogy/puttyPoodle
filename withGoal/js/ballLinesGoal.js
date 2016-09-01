@@ -27,8 +27,11 @@ var xRange, xRangeBegin, xRangeEnd;
 
 //-----Goal-----
   var goalR = 15;
-  var goalX = Math.floor(Math.random()*(stageWd-(goalR*2)))+goalR;
-  var goalY = Math.floor(Math.random()*(stageHt-(goalR*2)))+goalR;
+  do{
+    var goalX = Math.floor(Math.random()*(stageWd-(goalR*2)))+goalR;
+    var goalY = Math.floor(Math.random()*(stageHt-(goalR*2)))+goalR;
+  }while(goalX === ballX);
+
 
 //-----Distance Varialbles-----
   var deltaX, deltaY, pXY;
@@ -115,7 +118,6 @@ function ball(){
   ctx.fillStyle = "white";
   ctx.fill();
   ctx.lineWidth = 1;
-  // ctx.stroke();
   ctx.restore();
 
   ctx.save();
@@ -242,14 +244,12 @@ function goal(){
   ctx.strokeStyle = "white";
   ctx.lineWidth = 8;
   ctx.stroke();
-  // ctx.fillStyle = "white";
-  // ctx.fill();
   ctx.restore();
 }
 
 function detectGoal(){
   distance();
-  console.log("pXY :" + pXY, " ballY :"+ ballY, "ballX :"+ ballX, "calY : "+ calY, "goalY :"+ goalY, "goalX :" + goalX, "vY :" + vY, "vX : "+vX);
+  // console.log("pXY :" + pXY, " ballY :"+ ballY, "ballX :"+ ballX, "calY : "+ calY, "goalY :"+ goalY, "goalX :" + goalX, "vY :" + vY, "vX : "+vX);
   if(pXY<(ballR+goalR)-10){
     ballX = goalX;
     ballY = goalY;
@@ -271,10 +271,10 @@ function scoreMsg(){
   ctx.fillStyle = "white";
 
   //-----To ensure proper display of code-----
-  if(goalX>(stageWd-80) && goalY<(80)){ //Right Top Corner
+  if(goalX>(stageWd-150) && goalY<(80)){ //Right Top Corner
     ctx.fillText('Popsicles!', (goalX-200), (goalY+80));
   }
-  else if(goalX>(stageWd-80) && goalY>(stageHt-80) ){// Right Bottom Corner
+  else if(goalX>(stageWd-150) && goalY>(stageHt-80) ){// Right Bottom Corner
     ctx.fillText('Popsicles!', (goalX-200), (goalY- 60));
   }
   else if(goalX>(stageWd-80)){//Along Right Edge
@@ -289,6 +289,9 @@ function scoreMsg(){
   else if(goalX<80){ // Along left Edge
     ctx.fillText('Popsicles!', (goalX+40), (goalY-25));
   }
+  else if(goalY<450){//Along bottom Edge
+    ctx.fillText('Popsicles!', (goalX), (goalY-50));
+  }
   else{
     ctx.fillText('Popsicles!', (goalX+50), (goalY+50));
   }
@@ -299,10 +302,10 @@ function miss(){
   ctx.font = "42px 'Gloria Hallelujah'" ;
   ctx.fillStyle = "white";
 
-  if(goalX>(stageWd-80) && goalY<(80)){ //Right Top Corner
+  if(goalX>(stageWd-150) && goalY<(80)){ //Right Top Corner
     ctx.fillText('I\'m here ~', (goalX-200), (goalY+80));
   }
-  else if(goalX>(stageWd-80) && goalY>(stageHt-80) ){// Right Bottom Corner
+  else if(goalX>(stageWd-150) && goalY>(stageHt-80) ){// Right Bottom Corner
     ctx.fillText('I\'m here ~', (goalX-200), (goalY- 60));
   }
   else if(goalX>(stageWd-80)){//Along Right Edge
@@ -317,6 +320,9 @@ function miss(){
   else if(goalX<80){ // Along left Edge
     ctx.fillText('I\'m here ~', (goalX+40), (goalY-25));
   }
+  else if(goalY<450){//Along bottom Edge
+    ctx.fillText('I\'m here ~', (goalX), (goalY-50));
+  }
   else{
     ctx.fillText('I\'m here ~', (goalX+50), (goalY+50));
   }
@@ -328,11 +334,24 @@ function refresh(){
 
 function clear(){
   ctx.clearRect(0,0,stageWd,stageHt);
-  ballX = Math.floor(Math.random()*(stageWd-(ballR*2)))+ballR;
-  ballY = Math.floor(Math.random()*(stageHt/2)+ballR);
-  goalX = ballX;
-  // goalX = Math.floor(Math.random()*560)+20;
-  goalY = Math.floor(Math.random()*260)+20;
+
+  do{
+        ballX = Math.floor(Math.random()*(stageWd-100))+50;
+        ballY = Math.floor(Math.random()*(stageHt/3))+(30); //Keeping Y to the top of third of the page
+
+      do{
+        var avoid = stageHt-ballY;//getting the remainging buffer with
+        goalX = Math.floor(Math.random()*(stageWd-(goalR*2)))+goalR;
+        goalY = Math.floor(Math.random()*(stageHt-(stageHt/3))+(stageHt/3));
+      }while(goalX === ballX && goalY<(ballY+150));//Regenerates goal coords if goalY is not 150pts below ballY
+
+        distance();
+
+    }while(pXY<250);
+    distance();
+    console.log( "pXY = " + pXY);
+    console.log("ballY-goalY =", ballY-goalY)
+
   vY = 1;
   vX = 0;
   gY = 1;
@@ -345,12 +364,6 @@ function clear(){
   run = setInterval(draw,20);//Re-initiating the intervals.
   start = 0;
   score = false;
-}
-
-function resetPife(){
-    var parent = document.getElementById('rightHead');
-    var newChild = document.createElement('div')
-
 }
 
 function retry() {
