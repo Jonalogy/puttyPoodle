@@ -1,13 +1,45 @@
 #contain{
   text-align: center;
 }
-#gameTitle{
+
+#leftHead, #gameTitle, #rightHead{
   font-family: 'Baloo Paaji', cursive;
+  display: inline-block;
+  /*border: 1px solid black;*/
   color: white;
-  font-size: 50px;
+}
+
+#gameTitle{
+  font-size: 60px;
   margin: 0;
   padding: 0;
 }
+
+#leftHead, #rightHead{
+  width: 300px;
+}
+
+#pife{
+  height: 20px;
+  width: 20px;
+  font-size: 30px;
+  margin-right: 50px;
+  display: inline-block;
+}
+
+#lvl{
+  font-size: 30px;
+}
+
+.lives{
+  height: 30px;
+  width: 30px;
+  border-radius: 30px;
+  background-color: white;
+  display: inline-block;
+  margin: 0px 5px;
+}
+
 #control{
   display:inline-block;
 }
@@ -40,8 +72,9 @@
   order: 3;
   flex-grow: 1;
   /*background-color: rgba(20, 18, 21, 0.93);*/
-
 }
+
+
 
 .butts{
   border: none;
@@ -54,10 +87,6 @@
   display: inline-block;
   font-size: 20px;
   font-family: 'Baloo Paaji', cursive;
-}
-
-#id{
-
 }
 
 html{

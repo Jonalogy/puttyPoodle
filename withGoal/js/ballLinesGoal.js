@@ -44,7 +44,7 @@ var xRange, xRangeBegin, xRangeEnd;
   $('#start').click(function(){start = 1;});
 
 //---Interval---
-run = setInterval(draw,20);
+// run = setInterval(draw,20);
 
 function down(){
   var top = document.getElementById('canvas').offsetTop;
@@ -147,10 +147,10 @@ function ball(){
 
       //-----Changes in X-axis movement
       if(aX>0){
-        aX = Number((aX-0.005).toFixed(6));//Air Resistance
+        aX = Number((aX-0.01).toFixed(6));//Air Resistance
       }
       else{
-        aX = Number((aX+0.005).toFixed(6));
+        aX = Number((aX+0.01).toFixed(6));
       }
       vX = Number((vX + aX).toFixed(6));
       ballX = Number((ballX + vX).toFixed(6));
@@ -204,33 +204,34 @@ function ball(){
 
       //Influencing ball's velocity in X-direction
 
-      if((ballY+ballR) > (calY-5)){
-        ballY = calY - ballR;//updating ballY to calculated y-position
+      if((ballY+ballR) > (calY-5) && (ballY+ballR) < (calY+20)){
+        ballY = calY - (ballR+2);//updating ballY to calculated y-position
           if(bridges[i][4]>=0){
 
-            if(vX===0){
-              aX = Number((bridges[i][4]*(0.3)).toFixed(6));
+            if(vX<0.3){
+              aX = Number((bridges[i][4]*(0.2)).toFixed(6));
               vX = 1;
             }
             else{
               aX = Number((bridges[i][4]*(0.3)).toFixed(6));
-              vX = Number((vX*1.1).toFixed(6));
+              vX = Number((vX*0.8).toFixed(6));
             }
 
           }
           else{
-            if(vX===0){
-              aX = Number((bridges[i][4]*(0.3)).toFixed(6));
+            if(vX>-0.3){
+              aX = Number((bridges[i][4]*(0.2)).toFixed(6));
               vX = -1;
             }
             else{
               aX = Number((bridges[i][4]*(0.3)).toFixed(6));
-              vX = Number((vX*1.1).toFixed(6));
+              vX = Number((vX*0.8).toFixed(6));
             }
           }
 
         //Influencing ball's velocity in Y-direction
-          vY = Number((vY*(-0.95)).toFixed(6));
+          vY = Number((vY*(-1)).toFixed(6));
+          // vY = Number((vY*(-0.98)).toFixed(6));
           }
         }
       }
@@ -240,7 +241,7 @@ function ball(){
 
 function detectGoal(){
   distance();
-  console.log("pXY :" + pXY, " ballY :"+ ballY, "ballX :"+ ballX, "calY : "+ calY, "goalY :"+ goalY, "goalX :"+ goalX);
+  console.log("pXY :" + pXY, " ballY :"+ ballY, "ballX :"+ ballX, "calY : "+ calY, "goalY :"+ goalY, "goalX :"+ goalX, "vY :"+vY, "vX : "+vX);
   if(pXY<(ballR+goalR)-10){
     ballX = goalX;
     ballY = goalY;
