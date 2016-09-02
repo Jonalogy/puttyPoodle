@@ -57,6 +57,7 @@ var xRange, xRangeBegin, xRangeEnd;
   $('#canvas').mousedown(down);
   $('#canvas').mouseup(lift);
   $('#start').click(function(){start = 1;});
+  $('#start').click(backgroundMusic);
   $("#retry").on("click", retry)
 
 //---Interval---
@@ -117,6 +118,7 @@ function draw(){
       ctx.font = "100px 'Gloria Hallelujah'" ;
       ctx.fillStyle = "white";
       ctx.fillText("AWW...", 380,280);
+      document.getElementById('wonderfulWorld').pause();
       document.getElementById('aww').play();
       clearInterval(run);
     }
@@ -430,4 +432,8 @@ function retry() {
   }
   goalR = 50;
   clear();
+}
+
+function backgroundMusic(){
+  document.getElementById('wonderfulWorld').play();
 }
