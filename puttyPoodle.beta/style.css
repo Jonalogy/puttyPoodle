@@ -116,6 +116,6 @@ body{
 
 #hidden-font-loader {
   font-family: 'Gloria Hallelujah';
-  display: none;
+  /*display: none;*/
   color: #4BDAE3;
 }

@@ -157,10 +157,11 @@ function ball(){
   ctx.lineWidth = 1;
   ctx.restore();
 
-  ctx.save();
-  ctx.strokeStyle = "red";
-  ctx.strokeRect(ballX, ballY, 1, 1);
-  ctx.restore();
+//---Use this to mark the center of the ball---
+  // ctx.save();
+  // ctx.strokeStyle = "red";
+  // ctx.strokeRect(ballX, ballY, 1, 1);
+  // ctx.restore();
 
     if(start===1){
       //-----Changes in Y-axis movement
@@ -238,7 +239,6 @@ function ball(){
         // console.log("vX: "+ vX + " , vY:" + vY);
 
         //---Influencing ball's velocity in X-direction
-
           if((ballY+ballR) > (calY-5) && (ballY+ballR) < (calY+20)){
               if(vY>3 || vY<-3){
                 document.getElementById('pop').play();
@@ -317,31 +317,31 @@ function scoreMsg(){
 
   //-----To ensure proper display of code-----
     if(goalX>(stageWd-150) && goalY<80){ //Right Top Corner
-    ctx.fillText('Popsicles!', (goalX-200), (goalY+80));
+    ctx.fillText('Score!', (goalX-200), (goalY+80));
   }
   else if(goalX>(stageWd-150) && goalY>(stageHt-80) ){// Right Bottom Corner
-    ctx.fillText('Popsicles!', (goalX-200), (goalY- 60));
+    ctx.fillText('Score!', (goalX-200), (goalY- 60));
   }
   else if(goalX>(stageWd-80)){//Along Right Edge
-    ctx.fillText('Popsicles!', (goalX-200), (goalY-40));
+    ctx.fillText('Score!', (goalX-200), (goalY-40));
   }
   else if(goalX<80 && goalY<80){//Left Top Corner
-    ctx.fillText('Popsicles!', (goalX+70), (goalY+50));
+    ctx.fillText('Score!', (goalX+70), (goalY+50));
   }
   else if(goalX<80 && goalY>(stageHt-80)){//Left Bottom Corner
-    ctx.fillText('Popsicles!', (goalX+70), (goalY-50));
+    ctx.fillText('Score!', (goalX+70), (goalY-50));
   }
   else if(goalX<80){ // Along left Edge
-    ctx.fillText('Popsicles!', (goalX+70), (goalY-25));
+    ctx.fillText('Score!', (goalX+70), (goalY-25));
   }
   else if(goalY>400){//Along bottom Edge
-    ctx.fillText('Popsicles!', (goalX), (goalY-100));
+    ctx.fillText('Score!', (goalX), (goalY-100));
   }
   else if(goalY<80){//Along top Edge
-    ctx.fillText('Popsicles!', (goalX), (goalY+100));
+    ctx.fillText('Score!', (goalX), (goalY+100));
   }
   else{
-    ctx.fillText('Popsicles!', (goalX-100), (goalY-80));
+    ctx.fillText('Score!', (goalX-100), (goalY-80));
   }
 }
 
