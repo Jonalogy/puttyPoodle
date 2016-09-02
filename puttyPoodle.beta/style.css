@@ -113,3 +113,9 @@ html{
 body{
   background-color: #4BDAE3
 }
+
+#hidden-font-loader {
+  font-family: 'Gloria Hallelujah';
+  display: none;
+  color: #4BDAE3;
+}
