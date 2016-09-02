@@ -62,22 +62,32 @@ var xRange, xRangeBegin, xRangeEnd;
 //---Interval---
   run = setInterval(draw,20);
 
-function down(){
+function down(){//Action done after mousedown
   if(start!=1){
     var top = document.getElementById('canvas').offsetTop;
     var left = document.getElementById('canvas').offsetLeft;
     pathXY.push((event.clientX)-left);//Collect start x-cord
     pathXY.push((event.clientY)-top);//collect start y-cord
+
+    // if(getX>3 && getX<(stageWd-3)){pathXY.push(getX);} //if user clicks within canvas
+    // else if(getX<3){pathXY.push(3);} //if user clicks to the left of canvas
+    // else if(getX>(stageWd-3)){pathXY.push(stageWd-3);}//if user clicks to the right of canvas
+    //
+    // if(getY>3 && getY<(stageHt-3)){pathXY.push(getY);} //if user clicks within canvas
+    // else if(getY<3){pathXY.push(3);} //if user clicks above the canvas
+    // else if(getY>(stageHt-3)){pathXY.push(stageHt-3);}//if user clicks below the canvas
+
   }
 }
 
-function lift(){
+function lift(){//Action done after mouseup
 
   if(start!=1){
     var top = document.getElementById('canvas').offsetTop;
     var left = document.getElementById('canvas').offsetLeft;
     pathXY.push((event.clientX)-left);//collect end X-cord
     pathXY.push((event.clientY)-top);//collect end Y-cord
+
     bridges.push(pathXY);// pushing path cords into bridge array for storing
     pathXY=[];//clear array for the next path input
     path++;//increment path count
@@ -107,6 +117,7 @@ function draw(){
       ctx.font = "100px 'Gloria Hallelujah'" ;
       ctx.fillStyle = "white";
       ctx.fillText("AWW...", 380,280);
+      document.getElementById('aww').play();
       clearInterval(run);
     }
     clearInterval(run);
@@ -217,50 +228,49 @@ function ball(){
       xRangeEnd = xRangeBegin + xRange;//Finds end of range.
 
       if(ballX>xRangeBegin && ballX<xRangeEnd){
-        console.log("Ball is above path "+ i);
-        //Using ballX to calculate the height ball has to stop
+
         calY = Number(((bridges[i][4]*ballX)+bridges[i][5]).toFixed(3));
-        console.log("Between X1:"+ bridges[i][0] + " , X2:" + bridges[i][2] + ", CalY:" + calY );
-        console.log("vX: "+ vX + " , vY:" + vY);
+        // console.log("Ball is above path "+ i);
+        //Using ballX to calculate the height ball has to stop
+        // console.log("Between X1:"+ bridges[i][0] + " , X2:" + bridges[i][2] + ", CalY:" + calY );
+        // console.log("vX: "+ vX + " , vY:" + vY);
 
+        //---Influencing ball's velocity in X-direction
 
-      //Influencing ball's velocity in X-direction
+          if((ballY+ballR) > (calY-5) && (ballY+ballR) < (calY+20)){
+              if(vY>3 || vY<-3){
+                document.getElementById('pop').play();
+              }
+              ballY = calY - (ballR+2);//updating ballY to calculated y-position
+              if(bridges[i][4]>=0){
 
-      if((ballY+ballR) > (calY-5) && (ballY+ballR) < (calY+20)){
-          if(vY>3 || vY<-3){
-            document.getElementById('pop').play();
-          }
-          ballY = calY - (ballR+2);//updating ballY to calculated y-position
-          if(bridges[i][4]>=0){
+                if(vX<0){
+                  aX = Number((bridges[i][4]*(0.2)).toFixed(6));
+                  vX = 1;
+                }
+                else{
+                  aX = Number((bridges[i][4]*(0.3)).toFixed(6));
+                  vX = Number((vX*0.95).toFixed(6));
+                }
 
-            if(vX<0.3){
-              aX = Number((bridges[i][4]*(0.2)).toFixed(6));
-              vX = 1;
+              }
+              else{
+                if(vX>-0.3){
+                  aX = Number((bridges[i][4]*(0.2)).toFixed(6));
+                  vX = -1;
+                }
+                else{
+                  aX = Number((bridges[i][4]*(0.3)).toFixed(6));
+                  vX = Number((vX*0.95).toFixed(6));
+                }
+              }
+
+            //Influencing ball's velocity in Y-direction
+              vY = Number((vY*(-1)).toFixed(6));
+              }
             }
-            else{
-              aX = Number((bridges[i][4]*(0.3)).toFixed(6));
-              vX = Number((vX*0.8).toFixed(6));
-            }
-
-          }
-          else{
-            if(vX>-0.3){
-              aX = Number((bridges[i][4]*(0.2)).toFixed(6));
-              vX = -1;
-            }
-            else{
-              aX = Number((bridges[i][4]*(0.3)).toFixed(6));
-              vX = Number((vX*0.8).toFixed(6));
-            }
-          }
-
-        //Influencing ball's velocity in Y-direction
-          vY = Number((vY*(-1)).toFixed(6));
-          }
-        }
       }
     }
-
 
   if(ballY>=488 && (vX<0.05 && vX>-0.05)){
     start  = 2;
