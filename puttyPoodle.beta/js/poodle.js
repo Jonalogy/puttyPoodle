@@ -54,8 +54,8 @@ var xRange, xRangeBegin, xRangeEnd;
 
 //----Event Listeners-----
 
-  $('#canvas').mousedown(down);
-  $('#canvas').mouseup(lift);
+  $('#canvas').mousedown(function(event){down(event)});
+  $('#canvas').mouseup(function(event){lift(event)});
   $('#start').click(function(){start = 1;});
   $('#start').click(backgroundMusic);
   $("#retry").on("click", retry)
@@ -63,26 +63,16 @@ var xRange, xRangeBegin, xRangeEnd;
 //---Interval---
   run = setInterval(draw,20);
 
-function down(){//Action done after mousedown
+function down(event){//Action done after mousedown
   if(start!=1){
     var top = document.getElementById('canvas').offsetTop;
     var left = document.getElementById('canvas').offsetLeft;
     pathXY.push((event.clientX)-left);//Collect start x-cord
     pathXY.push((event.clientY)-top);//collect start y-cord
-
-    // if(getX>3 && getX<(stageWd-3)){pathXY.push(getX);} //if user clicks within canvas
-    // else if(getX<3){pathXY.push(3);} //if user clicks to the left of canvas
-    // else if(getX>(stageWd-3)){pathXY.push(stageWd-3);}//if user clicks to the right of canvas
-    //
-    // if(getY>3 && getY<(stageHt-3)){pathXY.push(getY);} //if user clicks within canvas
-    // else if(getY<3){pathXY.push(3);} //if user clicks above the canvas
-    // else if(getY>(stageHt-3)){pathXY.push(stageHt-3);}//if user clicks below the canvas
-
   }
 }
 
-function lift(){//Action done after mouseup
-
+function lift(event){//Action done after mouseup
   if(start!=1){
     var top = document.getElementById('canvas').offsetTop;
     var left = document.getElementById('canvas').offsetLeft;
