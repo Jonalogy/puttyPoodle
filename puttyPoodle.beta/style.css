@@ -3,11 +3,16 @@ html{
 }
 
 body{
-  background-color: #4BDAE3
+  background-color: #4BDAE3;
+  overflow: hidden;
 }
+
+body, html {height:100%;}
 
 #contain{
   text-align: center;
+  height:100%;
+  overflow:hidden;
 }
 
 #leftHead, #gameTitle, #rightHead{

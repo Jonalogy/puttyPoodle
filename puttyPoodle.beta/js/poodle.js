@@ -42,7 +42,6 @@ var xRange, xRangeBegin, xRangeEnd;
       distance();
     }while(pXY<250);
 
-
 //-----Distance Varialbles-----
   var deltaX, deltaY, pXY;
 
@@ -155,11 +154,11 @@ function ball(){
   ctx.lineWidth = 1;
   ctx.restore();
 
-//---Use this to mark the center of the ball---
-  // ctx.save();
-  // ctx.strokeStyle = "red";
-  // ctx.strokeRect(ballX, ballY, 1, 1);
-  // ctx.restore();
+  //---Use this to mark the center of the ball---
+    // ctx.save();
+    // ctx.strokeStyle = "red";
+    // ctx.strokeRect(ballX, ballY, 1, 1);
+    // ctx.restore();
 
     if(start===1){
       //-----Changes in Y-axis movement
