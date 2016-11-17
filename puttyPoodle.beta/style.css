@@ -1,3 +1,11 @@
+html{
+  position: relative;
+}
+
+body{
+  background-color: #4BDAE3
+}
+
 #contain{
   text-align: center;
 }
@@ -88,10 +96,7 @@
 #dashBoard2{
   order: 3;
   flex-grow: 1;
-  /*background-color: rgba(20, 18, 21, 0.93);*/
 }
-
-
 
 .butts{
   border: none;
@@ -106,12 +111,8 @@
   font-family: 'Baloo Paaji', cursive;
 }
 
-html{
-  position: relative;
-}
-
-body{
-  background-color: #4BDAE3
+.hide {
+  display:none
 }
 
 #hidden-font-loader {

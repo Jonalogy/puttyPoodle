@@ -56,9 +56,13 @@ var xRange, xRangeBegin, xRangeEnd;
 
   $('#canvas').mousedown(function(event){down(event)});
   $('#canvas').mouseup(function(event){lift(event)});
-  $('#start').click(function(){start = 1;});
+  $('#start').click(function(){
+    start = 1;
+    $('#clear').addClass('hide')
+  });
   $('#start').click(backgroundMusic);
   $("#retry").on("click", retry)
+  $('#clear').click(function(){ $('#clear').addClass('hide') })
 
 //---Interval---
   run = setInterval(draw,20);
@@ -94,6 +98,7 @@ function draw(){
       scoreMsg();
       pts++;
       document.getElementById('pts').innerHTML="<span id='pts'>"+pts+"<span>";
+      $('#clear').removeClass('hide')
     }
   if(start===2 && pife!=0){
     miss()
@@ -111,6 +116,9 @@ function draw(){
       document.getElementById('wonderfulWorld').pause();
       document.getElementById('aww').play();
       clearInterval(run);
+      $('#retry').removeClass('hide')
+      $('#clear').addClass('hide')
+      $('#start').addClass('hide')
     }
     clearInterval(run);
   }
@@ -366,6 +374,8 @@ function miss(){
   else{
     ctx.fillText('I\'m here ~', (goalX - 100), (goalY-80));
   }
+
+  $('#clear').removeClass('hide')
 }
 
 function refresh(){
@@ -422,6 +432,9 @@ function retry() {
   }
   goalR = 50;
   clear();
+  document.getElementById('wonderfulWorld').pause();
+  $('#start').removeClass('hide');
+  $('#retry').addClass('hide')
 }
 
 function backgroundMusic(){
